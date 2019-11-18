@@ -26,3 +26,26 @@ Click **OK** and on the next screen select **Web application (Model-View-Control
 
 - There are two namespaces to communicate with Active Directory using C#: **System.DirectoryServices.ActiveDirectory** and **System.DirectoryServices.AccountManagement** (this is what I used) You need ot install it using the command shown here: https://www.nuget.org/packages/System.DirectoryServices.AccountManagement/4.7.0-preview2.19523.17
 
+
+- Add class called **User** in **Models** folder:
+```
+using System.ComponentModel.DataAnnotations;
+
+namespace ActiveDirectory.Models
+{
+    public class User
+    {
+        public int Id { get; set; }
+        [Display(Name = "Display Name")]
+        public string DisplayName { get; set; }
+        public string SamAccountName { get; set; }
+        public string Manager { get; set; }
+        public int Pid { get; set; }
+        public string Image { get; set; }
+        public string JobTitle { get; set; }
+        public string Company { get; set; }
+        public string Phone { get; set; }
+        public string Disabled { get; set; }
+    }
+}
+```
