@@ -2,9 +2,12 @@
 
 This article attempts to show you how to connect OrgChart to active directory using C# in a simple way. I made this simple web application using ASP.NET Core. The aaplication performs simple operations as showing all users in particular OU, disabling a user and reseting a password.
 
-You should have some basic knowledge of ASP.NET MVC. I use **Visual Studio 2017**
+You should have some basic knowledge of ASP.NET MVC. 
+I use **Visual Studio 2017** in this example.
 
 In my case, I use test Active Directory system and run the code on the domain controler. My domain is called **ad.balkangraph.com** and my Organizational Unit is called **TestOU**.
+
+I use **Visual Studio 2017** in this example.
 
 - Start Visual Studio and create a new **ASP.NET Core Web Application** project called **Active Directory**
 
