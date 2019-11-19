@@ -49,3 +49,4 @@ namespace ActiveDirectory.Models
     }
 }
 ```
+- Add class called **UserPrincipalEx** for extending UserPrincipal class in oreder to be able to get more AD sttributes
