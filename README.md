@@ -495,7 +495,7 @@ public EmptyResult UpdateUser(User user)
 ```
 template: "{controller=Home}/{action=OrgChart}/{id?}");
 ```
-- Edit **_Layout.cshtml** for better view. Remove everything in the body except **@RenderBody**:
+- Edit **_Layout.cshtml** for better view. Remove all the content in the body, except **@RenderBody**:
 ```
 <body>
 
