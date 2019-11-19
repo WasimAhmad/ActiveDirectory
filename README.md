@@ -8,7 +8,7 @@ In my case, I have test Active Directory system and run the code on the domain c
 
 I use **Visual Studio 2017** in this example.
 
-- Start Visual Studio and create a new **ASP.NET Core Web Application** project called **Active Directory**
+- Start Visual Studio and create a new **ASP.NET Core Web Application** project called **ActiveDirectory**
 
 
 ![ad1](https://balkangraph.com/js/img/ad1.png)
