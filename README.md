@@ -4,8 +4,6 @@ This article is going to show you how to connect OrgChart to active directory us
 
 You should have some basic knowledge of ASP.NET MVC. 
 
-I use **Visual Studio 2017** in this example.
-
 In my case, I have test Active Directory system and run the code on the domain controler. My domain is called **ad.balkangraph.com** and my Organizational Unit is called **TestOU**.
 
 I use **Visual Studio 2017** in this example.
