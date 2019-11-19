@@ -53,7 +53,7 @@ namespace ActiveDirectory.Models
 ```
 using System.DirectoryServices.AccountManagement;
 
-namespace dotNETCore.Models
+namespace ActiveDirectory.Models
 {
     [DirectoryRdnPrefix("CN")]
     [DirectoryObjectClass("Person")]
