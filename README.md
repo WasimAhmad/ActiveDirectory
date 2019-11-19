@@ -444,7 +444,7 @@ public EmptyResult UpdateUser(User user)
              function enableUserHandler(nodeId) {
                 var data = chart.get(nodeId);
                 var samAccountName = data.samAccountName;
-                $.post("@Url.Action("EnaableAccount")", { samAccountName: samAccountName })
+                $.post("@Url.Action("EnableAccount")", { samAccountName: samAccountName })
                     .done(function () {
 
                    })
