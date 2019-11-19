@@ -13,7 +13,7 @@ I use **Visual Studio 2017** in this example.
 
 ![ad1](https://balkangraph.com/js/img/ad1.png)
 
-Click **OK** and on the next screen select **Web application (Model-View-Controller)**. Click **OK** again.
+Click **OK** and on the next screen select (or leave the default option) **Web application (Model-View-Controller)**. Click **OK** again.
 
 
 ![ad2](https://balkangraph.com/js/img/ad2.png)
