@@ -154,7 +154,7 @@ namespace ActiveDirectory.Models
 ```
 
 
-- Add namespace, Action called **OrgChart** and all methods in your **HomeController**:
+- Add the namespace, Action called **OrgChart** and the following methods in your **HomeController**:
 ```
 using System.DirectoryServices.AccountManagement;
 ```
