@@ -496,4 +496,47 @@ public EmptyResult UpdateUser(User user)
 ```
 template: "{controller=Home}/{action=OrgChart}/{id?}");
 ```
+- Edit **_Layout.cshtml** for better view. Remove everything in the body except **@RenderBody**:
+```
+<body>
 
+   @RenderBody()
+
+   <environment include="Development"> ...
+   
+```
+- Add styles **site.css*:
+```
+html, body {
+   width: 100%;
+   height: 100%;
+   padding: 0;
+   margin: 0;
+   overflow: hidden;
+   font-family: Helvetica;
+
+}
+
+#tree {
+   width: 100%;
+   height: 100%;
+}
+
+
+.node.disabled rect {
+   /*fill: #F57C00*/
+   opacity: 0.5;
+   
+}
+
+.node.disabled image {
+   /*fill: #F57C00*/
+   opacity: 0.5;
+}
+
+.edit-assistant-button-content {
+   display: none;
+}
+```
+
+Done. Now you can start the project.
