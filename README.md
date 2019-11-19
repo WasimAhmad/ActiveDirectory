@@ -504,7 +504,7 @@ template: "{controller=Home}/{action=OrgChart}/{id?}");
    <environment include="Development"> ...
    
 ```
-- Add styles **site.css*:
+- Add some styles **site.css**:
 ```
 html, body {
    width: 100%;
