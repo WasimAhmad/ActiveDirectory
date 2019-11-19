@@ -491,3 +491,9 @@ public EmptyResult UpdateUser(User user)
     </script>
 }
 ```
+
+- In **Startup.cs** edit:
+```
+template: "{controller=Home}/{action=OrgChart}/{id?}");
+```
+
