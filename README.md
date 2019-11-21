@@ -34,12 +34,11 @@ namespace ActiveDirectory.Models
 {
     public class User
     {
-        public int Id { get; set; }
-        [Display(Name = "Display Name")]
+        public string Id { get; set; }
+        public string Pid { get; set; }
         public string DisplayName { get; set; }
         public string SamAccountName { get; set; }
         public string Manager { get; set; }
-        public int Pid { get; set; }
         public string Image { get; set; }
         public string JobTitle { get; set; }
         public string Company { get; set; }
@@ -166,35 +165,32 @@ public ActionResult OrgChart()
     return View(ADUsers);
 }
 
-public EmptyResult UpdateUser(User user)
+ public EmptyResult UpdateUser(User user)
         {
             var ctx = new PrincipalContext(ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
-            UserPrincipalEx userPrin = UserPrincipalEx.FindByIdentity(ctx, IdentityType.SamAccountName, user.SamAccountName);
+            UserPrincipalEx userPrin = UserPrincipalEx.FindByIdentity(ctx, IdentityType.DistinguishedName, user.Id);
+
+            if (user.SamAccountName != null)
+            {
+                userPrin.SamAccountName = user.SamAccountName;
+            }
 
             userPrin.DisplayName = user.DisplayName;
-            userPrin.SamAccountName = user.SamAccountName;
             userPrin.Title = user.JobTitle;
             userPrin.TelephoneNumber = user.Phone;
             userPrin.Company = user.Company;
+
             userPrin.Save();
 
             return new EmptyResult();
         }
-
-
 
         //if you want to get Groups of Specific OU you have to add OU Name in Context        
         public static List<User> GetallAdUsers()
         {
             List<User> AdUsers = new List<User>();
 
-  
-
             var ctx = new PrincipalContext(ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
-
-
-           
-
 
             UserPrincipal userPrin = new UserPrincipal(ctx);
             userPrin.Name = "*";
@@ -202,28 +198,13 @@ public EmptyResult UpdateUser(User user)
             searcher.QueryFilter = userPrin;
             var results = searcher.FindAll();
 
-            var id = 0;
-
             foreach (Principal p in results)
             {
-               
-                
-                UserPrincipalEx extp = UserPrincipalEx.FindByIdentity(ctx, IdentityType.SamAccountName, p.SamAccountName);
-               
+
+                UserPrincipalEx extp = UserPrincipalEx.FindByIdentity(ctx, IdentityType.DistinguishedName, p.DistinguishedName);
+
                 var managerCN = extp.Manager;
-
-               
-
-                string picture = "";
-
-                if (extp.ThumbnailPhoto != null)
-                {
-                    picture = Convert.ToBase64String(extp.ThumbnailPhoto);
-                }
-                
-
                 var mgr = "";
-
                 string[] list = managerCN.Split(',');
 
                 if (managerCN.Length > 0)
@@ -231,16 +212,20 @@ public EmptyResult UpdateUser(User user)
                     mgr = list[0].Substring(3);
                 }
 
-                
+                string picture = "";
 
-                id++;
+                if (extp.ThumbnailPhoto != null)
+                {
+                    picture = Convert.ToBase64String(extp.ThumbnailPhoto);
+                }
 
                 AdUsers.Add(new User
                 {
 
-                    Id = id,
-                    DisplayName = p.DisplayName,
-                    SamAccountName = p.SamAccountName,
+                    Id = extp.DistinguishedName,
+                    Pid = extp.Manager,
+                    DisplayName = extp.DisplayName,
+                    SamAccountName = extp.SamAccountName,
                     Manager = mgr,
                     Image = "data:image/jpeg;base64," + picture,
                     JobTitle = extp.Title,
@@ -248,35 +233,19 @@ public EmptyResult UpdateUser(User user)
                     Phone = extp.TelephoneNumber,
                     Disabled = (extp.Enabled == false) ? "disabled" : "enabled"
                 });
-               
-            }
-
-
-
-            foreach (User u in AdUsers)
-            {
-
-
-                var pid = AdUsers.Find(r => r.DisplayName == u.Manager);
-                if (pid != null)
-                {
-                    u.Pid = pid.Id;
-                }
 
             }
-
 
             return AdUsers;
-            
+
         }
 
-        public ActionResult ResetPassword(string SamAccountName)
+        public ActionResult ResetPassword(string id)
         {
             //i get the user by its SamaccountName to change his password
             PrincipalContext context = new PrincipalContext
-                                       (ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
-            UserPrincipal user = UserPrincipal.FindByIdentity
-                                 (context, IdentityType.SamAccountName, SamAccountName);
+                (ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
+            UserPrincipal user = UserPrincipal.FindByIdentity(context, IdentityType.DistinguishedName, id);
             //Enable Account if it is disabled
             user.Enabled = true;
             //Reset User Password
@@ -284,18 +253,18 @@ public EmptyResult UpdateUser(User user)
             user.SetPassword(newPassword);
             //Force user to change password at next logon (optional)
             user.ExpirePasswordNow();
+
             user.Save();
-          
+
             return RedirectToAction("OrgChart");
         }
 
-        public ActionResult DisableAccount(string SamAccountName)
+        public ActionResult DisableAccount(string id)
         {
             //i get the user by its SamaccountName to change his password
             PrincipalContext context = new PrincipalContext
-                                       (ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
-            UserPrincipal user = UserPrincipal.FindByIdentity
-                                 (context, IdentityType.SamAccountName, SamAccountName);
+                (ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
+            UserPrincipal user = UserPrincipal.FindByIdentity(context, IdentityType.DistinguishedName, id);
             user.Enabled = false;
 
             user.Save();
@@ -303,18 +272,48 @@ public EmptyResult UpdateUser(User user)
             return RedirectToAction("OrgChart");
         }
 
-        public ActionResult EnableAccount(string SamAccountName)
+        public ActionResult EnableAccount(string id)
         {
             //i get the user by its SamaccountName to change his password
             PrincipalContext context = new PrincipalContext
-                                       (ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
-            UserPrincipal user = UserPrincipal.FindByIdentity
-                                 (context, IdentityType.SamAccountName, SamAccountName);
+                (ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
+            UserPrincipal user = UserPrincipal.FindByIdentity(context, IdentityType.DistinguishedName, id);
             user.Enabled = true;
 
             user.Save();
 
             return RedirectToAction("OrgChart");
+        }
+
+
+        public JsonResult AddAccount(string pid, string name)
+        {
+            var ctx = new PrincipalContext(ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
+            var up = new UserPrincipal(ctx, name, "tempP@ssword", true);
+            up.Save();
+
+            UserPrincipal userPrin = new UserPrincipal(ctx);
+            userPrin.Name = "*";
+            var searcher = new PrincipalSearcher();
+            searcher.QueryFilter = userPrin;
+            var results = searcher.FindAll();
+
+            UserPrincipalEx extpsdf = null;
+            foreach (Principal p in results)
+            {
+                UserPrincipalEx extp = UserPrincipalEx.FindByIdentity(ctx, IdentityType.DistinguishedName, p.DistinguishedName);
+
+                if (extp.SamAccountName == name)
+                {
+                    extp.Manager = pid;
+
+                    extp.Save();
+                    extpsdf = extp;
+                }
+
+            }
+
+            return Json(new { id = extpsdf.DistinguishedName });
         }
 ```
 - Add View **OrgChart** for this Action in **Home** folder:
@@ -387,8 +386,6 @@ public EmptyResult UpdateUser(User user)
             }
 
 
-
-
             var chart = new OrgChart(document.getElementById("tree"), {
                 nodeBinding: {
                     field_0: "displayName",
@@ -409,8 +406,10 @@ public EmptyResult UpdateUser(User user)
                         icon: StopIcon,
                     },
 
+                    add: { text: "Add New Account" },
 
                 },
+
                 tags: {
                     disabled: {
                         nodeMenu: {
@@ -421,42 +420,35 @@ public EmptyResult UpdateUser(User user)
                             }
 
                         }
-                    }
+                    },
+
                 },
+
                 nodes: n
             });
 
 
            function resetPasswordHandler(nodeId) {
-                var data = chart.get(nodeId);
-                var samAccountName = data.samAccountName;
-                $.post("@Url.Action("ResetPassword")", { samAccountName: samAccountName })
+               $.post("@Url.Action("ResetPassword")", { id: nodeId })
                     .done(function () {
-
+                        alert("Password has been changed!")
                    })
-
-               chart.removeNodeTag(nodeId, "disabled");
                chart.draw();
-
-            }
+           }
 
 
              function enableUserHandler(nodeId) {
-                var data = chart.get(nodeId);
-                var samAccountName = data.samAccountName;
-                $.post("@Url.Action("EnableAccount")", { samAccountName: samAccountName })
+                 $.post("@Url.Action("EnableAccount")", { id: nodeId })
                     .done(function () {
 
-                   })
-
+                 })
                chart.removeNodeTag(nodeId, "disabled");
                chart.draw();
-
-            }
+             }
 
             chart.editUI.on('field', function (sender, args) {
 
-                if (args.name == 'displayName' || args.name == 'samAccountName' ||
+                if (args.name == 'samAccountName' ||
                     args.name == 'manager' || args.name == 'image' ||
                     args.name == 'Add new field' || args.name == 'disabled' ||
                     args.name == 'isAassistant') {
@@ -475,8 +467,7 @@ public EmptyResult UpdateUser(User user)
 
             chart.on('remove', function (sender, nodeId) {
                 var data = chart._get(nodeId);
-                var samAccountName = data.samAccountName;
-                $.post("@Url.Action("DisableAccount")", { samAccountName: samAccountName })
+                $.post("@Url.Action("DisableAccount")", { id: nodeId})
                     .done(function () {
                     })
                 data.tags = ["disabled"];
@@ -484,8 +475,19 @@ public EmptyResult UpdateUser(User user)
                 return false;
             });
 
+            chart.on('add', function (sender, nodeData) {
+                var name = prompt("Name of the new user:");
+                console.log("nodeData: " + nodeData);
 
-
+                $.post("@Url.Action("AddAccount")", { pid: nodeData.pid, name: name })
+                    .done(function (result) {
+                        sender.add({ id: result.id, pid: nodeData.pid });
+                        sender.draw(OrgChart.action.update, null, function () {
+                            sender.editUI.show(result.id);
+                        })
+                    });
+                return false;
+            })
         }
     </script>
 }
