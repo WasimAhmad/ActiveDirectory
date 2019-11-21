@@ -28,8 +28,6 @@ Click **OK** and on the next screen select (or leave the default option) **Web a
 
 - Add class called **User** in **Models** folder with the following contect:
 ```
-using System.ComponentModel.DataAnnotations;
-
 namespace ActiveDirectory.Models
 {
     public class User
