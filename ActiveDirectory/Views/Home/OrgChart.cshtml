@@ -66,8 +66,6 @@
             }
 
 
-
-
             var chart = new OrgChart(document.getElementById("tree"), {
                 nodeBinding: {
                     field_0: "displayName",
@@ -88,8 +86,10 @@
                         icon: StopIcon,
                     },
 
+                    add: { text: "Add New Account" },
 
                 },
+
                 tags: {
                     disabled: {
                         nodeMenu: {
@@ -100,46 +100,39 @@
                             }
 
                         }
-                    }
+                    },
+
                 },
+
                 nodes: n
             });
 
 
            function resetPasswordHandler(nodeId) {
-                var data = chart.get(nodeId);
-                var samAccountName = data.samAccountName;
-                $.post("@Url.Action("ResetPassword")", { samAccountName: samAccountName })
+               $.post("@Url.Action("ResetPassword")", { id: nodeId })
                     .done(function () {
-
+                        alert("Password has been changed!")
                    })
-
-               chart.removeNodeTag(nodeId, "disabled");
                chart.draw();
-
-            }
+           }
 
 
              function enableUserHandler(nodeId) {
-                var data = chart.get(nodeId);
-                var samAccountName = data.samAccountName;
-                $.post("@Url.Action("EnableAccount")", { samAccountName: samAccountName })
+                 $.post("@Url.Action("EnableAccount")", { id: nodeId })
                     .done(function () {
 
-                   })
-
+                 })
                chart.removeNodeTag(nodeId, "disabled");
                chart.draw();
-
-            }
+             }
 
             chart.editUI.on('field', function (sender, args) {
 
-                if (args.name == 'displayName' || args.name == 'samAccountName' ||
+                if (args.name == 'samAccountName' ||
                     args.name == 'manager' || args.name == 'image' ||
                     args.name == 'Add new field' || args.name == 'disabled' ||
                     args.name == 'isAassistant') {
-                    console.log(args.name);
+
                     return false;
 
                 }
@@ -154,8 +147,7 @@
 
             chart.on('remove', function (sender, nodeId) {
                 var data = chart._get(nodeId);
-                var samAccountName = data.samAccountName;
-                $.post("@Url.Action("DisableAccount")", { samAccountName: samAccountName })
+                $.post("@Url.Action("DisableAccount")", { id: nodeId})
                     .done(function () {
                     })
                 data.tags = ["disabled"];
@@ -163,8 +155,19 @@
                 return false;
             });
 
+            chart.on('add', function (sender, nodeData) {
+                var name = prompt("Name of the new user:");
+                console.log("nodeData: " + nodeData);
 
-
+                $.post("@Url.Action("AddAccount")", { pid: nodeData.pid, name: name })
+                    .done(function (result) {
+                        sender.add({ id: result.id, pid: nodeData.pid });
+                        sender.draw(OrgChart.action.update, null, function () {
+                            sender.editUI.show(result.id);
+                        })
+                    });
+                return false;
+            })
         }
     </script>
 }
