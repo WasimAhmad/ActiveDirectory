@@ -491,7 +491,7 @@ public ActionResult OrgChart()
 }
 ```
 
-- In **Startup.cs** edit:
+- In **Startup.cs** edit the action:
 ```
 template: "{controller=Home}/{action=OrgChart}/{id?}");
 ```
