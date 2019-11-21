@@ -460,7 +460,7 @@ public EmptyResult UpdateUser(User user)
                     args.name == 'manager' || args.name == 'image' ||
                     args.name == 'Add new field' || args.name == 'disabled' ||
                     args.name == 'isAassistant') {
-                    console.log(args.name);
+
                     return false;
 
                 }
