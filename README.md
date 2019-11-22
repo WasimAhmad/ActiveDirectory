@@ -151,7 +151,7 @@ namespace ActiveDirectory.Models
 ```
 
 
-- Replace the content of **HomeController**:
+- Replace the content of **HomeController** with the following code:
 ```
 using System;
 using System.Collections.Generic;
@@ -204,7 +204,7 @@ namespace ActiveDirectory.Controllers
                 userPrin.SamAccountName = user.SamAccountName;
             }
 
-           
+            //  userPrin.DisplayName = user.DisplayName;          
             userPrin.Title = user.JobTitle;
             userPrin.TelephoneNumber = user.Phone;
             userPrin.Company = user.Company;
@@ -338,14 +338,15 @@ namespace ActiveDirectory.Controllers
                     extp.Manager = pid;
 
                     extp.Save();
+
                     extpsdf = extp;
+
                 }
 
             }
 
-            return Json(new { id = extpsdf.DistinguishedName });
+            return Json(new { id = extpsdf.DistinguishedName, displayName = extpsdf.DisplayName });
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -354,6 +355,7 @@ namespace ActiveDirectory.Controllers
         }
     }
 }
+
 
 ```
 - Add View **OrgChart** for this Action in **Home** folder with the following content:
