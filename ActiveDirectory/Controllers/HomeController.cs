@@ -51,7 +51,7 @@ namespace ActiveDirectory.Controllers
                 userPrin.SamAccountName = user.SamAccountName;
             }
 
-            userPrin.DisplayName = user.DisplayName;
+           
             userPrin.Title = user.JobTitle;
             userPrin.TelephoneNumber = user.Phone;
             userPrin.Company = user.Company;
@@ -166,6 +166,7 @@ namespace ActiveDirectory.Controllers
         {
             var ctx = new PrincipalContext(ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
             var up = new UserPrincipal(ctx, name, "tempP@ssword", true);
+            up.DisplayName = name;
             up.Save();
 
             UserPrincipal userPrin = new UserPrincipal(ctx);
