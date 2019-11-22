@@ -358,7 +358,7 @@ namespace ActiveDirectory.Controllers
 
 
 ```
-- Replace **"ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com"** with your data
+- Replace **"ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com"** with your domain name data
 
 - Add View **OrgChart** for this Action in **Home** folder with the following content:
 ```
