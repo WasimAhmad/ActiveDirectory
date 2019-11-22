@@ -151,19 +151,50 @@ namespace ActiveDirectory.Models
 ```
 
 
-- Add the namespace, Action called **OrgChart** and the following methods in your **HomeController**:
+- Replace the content of **HomeController**:
 ```
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using ActiveDirectory.Models;
 using System.DirectoryServices.AccountManagement;
-```
 
-```
-public ActionResult OrgChart()
+namespace ActiveDirectory.Controllers
 {
-    List<User> ADUsers = GetallAdUsers();
-    return View(ADUsers);
-}
+    public class HomeController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
 
- public EmptyResult UpdateUser(User user)
+        public IActionResult About()
+        {
+            ViewData["Message"] = "Your application description page.";
+
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "Your contact page.";
+
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public ActionResult OrgChart()
+        {
+            List<User> ADUsers = GetallAdUsers();
+            return View(ADUsers);
+        }
+
+        public EmptyResult UpdateUser(User user)
         {
             var ctx = new PrincipalContext(ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
             UserPrincipalEx userPrin = UserPrincipalEx.FindByIdentity(ctx, IdentityType.DistinguishedName, user.Id);
@@ -173,7 +204,7 @@ public ActionResult OrgChart()
                 userPrin.SamAccountName = user.SamAccountName;
             }
 
-          
+           
             userPrin.Title = user.JobTitle;
             userPrin.TelephoneNumber = user.Phone;
             userPrin.Company = user.Company;
@@ -288,7 +319,7 @@ public ActionResult OrgChart()
         {
             var ctx = new PrincipalContext(ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
             var up = new UserPrincipal(ctx, name, "tempP@ssword", true);
-	    up.DisplayName = name;
+            up.DisplayName = name;
             up.Save();
 
             UserPrincipal userPrin = new UserPrincipal(ctx);
@@ -314,8 +345,18 @@ public ActionResult OrgChart()
 
             return Json(new { id = extpsdf.DistinguishedName });
         }
+
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}
+
 ```
-- Add View **OrgChart** for this Action in **Home** folder:
+- Add View **OrgChart** for this Action in **Home** folder with the following content:
 ```
 @model IEnumerable<ActiveDirectory.Models.User>
 @{
