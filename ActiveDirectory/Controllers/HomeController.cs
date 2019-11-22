@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ActiveDirectory.Models;
 using System.DirectoryServices.AccountManagement;
@@ -51,7 +49,7 @@ namespace ActiveDirectory.Controllers
                 userPrin.SamAccountName = user.SamAccountName;
             }
 
-           
+            //  userPrin.DisplayName = user.DisplayName;          
             userPrin.Title = user.JobTitle;
             userPrin.TelephoneNumber = user.Phone;
             userPrin.Company = user.Company;
@@ -185,14 +183,15 @@ namespace ActiveDirectory.Controllers
                     extp.Manager = pid;
 
                     extp.Save();
+
                     extpsdf = extp;
+
                 }
 
             }
 
-            return Json(new { id = extpsdf.DistinguishedName });
+            return Json(new { id = extpsdf.DistinguishedName, displayName = extpsdf.DisplayName });
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
