@@ -358,6 +358,8 @@ namespace ActiveDirectory.Controllers
 
 
 ```
+- Replace **"ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com"** with your data
+
 - Add View **OrgChart** for this Action in **Home** folder with the following content:
 ```
 @model IEnumerable<ActiveDirectory.Models.User>
