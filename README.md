@@ -523,8 +523,7 @@ namespace ActiveDirectory.Controllers
                 var fname = prompt("First name:");
                 var lname = prompt("Last name:");
                 var name = fname + lname;
-                console.log("nodeData: " + nodeData);
-
+                
                 $.post("@Url.Action("AddAccount")", { pid: nodeData.pid, name: name })
                     .done(function (result) {
                         sender.add({ id: result.id, pid: nodeData.pid, displayName: result.displayName });
