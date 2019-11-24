@@ -159,9 +159,9 @@
                 var fname = prompt("First name:");
                 var lname = prompt("Last name:");
                 var name = fname + lname;
-                console.log("nodeData: " + nodeData);
+                var displayName = fname + " " + lname;
 
-                $.post("@Url.Action("AddAccount")", { pid: nodeData.pid, name: name })
+                $.post("@Url.Action("AddAccount")", { pid: nodeData.pid, name: name, displayName: displayName })
                     .done(function (result) {
                         sender.add({ id: result.id, pid: nodeData.pid, displayName: result.displayName });
                         sender.draw(OrgChart.action.update, null, function () {
