@@ -165,6 +165,7 @@ namespace ActiveDirectory.Controllers
             var ctx = new PrincipalContext(ContextType.Domain, "ad.balkangraph.com", "OU=TestOU,DC=ad,DC=balkangraph,DC=com");
             var up = new UserPrincipal(ctx, name, "tempP@ssword", true);
             up.DisplayName = displayName;
+            up.Name = displayName;
             up.Save();
 
             UserPrincipal userPrin = new UserPrincipal(ctx);
