@@ -6,6 +6,8 @@ You should have some basic knowledge of ASP.NET MVC.
 
 In my case, I have test Active Directory system and run the code on the domain controler. My domain is called **ad.balkangraph.com** and my Organizational Unit is called **TestOU**.
 
+![ad3](https://balkangraph.com/js/img/ad3.png)
+
 I use **Visual Studio 2017** in this example.
 
 - Start Visual Studio and create a new **ASP.NET Core Web Application** project called **ActiveDirectory**
