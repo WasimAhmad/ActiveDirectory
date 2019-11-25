@@ -45,7 +45,7 @@ namespace ActiveDirectory.Models
     }
 }
 ```
-- Add class called **UserPrincipalEx** for extending UserPrincipal class in oreder to be able to get more AD sttributes:
+- Add class called **UserPrincipalEx** for extending UserPrincipal class in order to be able to get more AD sttributes:
 ```
 using System.DirectoryServices.AccountManagement;
 
